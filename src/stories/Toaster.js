@@ -96,7 +96,7 @@ export default function Toaster({ label = "" }) {
       ref={toasterContainer}
       // onMouseEnter={handleMouseEnter}
     >
-      {toasts.map(({ label }, index) => renderedToasts)}
+      {renderedToasts}
     </ol>
   );
 }
