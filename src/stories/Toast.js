@@ -7,29 +7,55 @@ import "./Toast.css";
 
 gsap.registerPlugin(useGSAP); // register the hook to avoid React version discrepancies
 
-export default function Toast({ index, label = "" }) {
+export default function Toast({ index, label = "", totalToasts }) {
   const toastContainer = useRef(null);
+  const calculatedTranslateY = `${(totalToasts - index) * -14}px`;
+
+  console.log(`${index} out of ${totalToasts}`);
 
   // scope ensures GSAP animations are applied correctly
   useGSAP(
     () => {
+      console.log(
+        `translateY for ${index} out of ${totalToasts}:`,
+        `${(totalToasts - index) * -14}px`,
+      );
       gsap.fromTo(
         toastContainer.current,
         {
           opacity: 0,
           filter: "blur(2px)",
-          translateY: "100%",
+          y: "100%",
         },
         {
           opacity: 1,
           filter: "blur(0px)",
-          translateY: "0",
+          y: 0,
           duration: 0.4,
           ease: "power1.out",
         },
       );
     },
-    { scope: toastContainer, revertOnUpdate: true },
+    {
+      scope: toastContainer,
+      revertOnUpdate: true,
+    },
+  );
+
+  //recalculates the y for previously mounted toasts
+  useGSAP(
+    () => {
+      gsap.to(toastContainer.current, {
+        y: calculatedTranslateY,
+        duration: 0.4,
+        ease: "power2.out",
+        overwrite: "auto",
+      });
+    },
+    {
+      scope: toastContainer,
+      dependencies: [calculatedTranslateY],
+    },
   );
 
   return (
