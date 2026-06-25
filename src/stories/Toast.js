@@ -9,7 +9,9 @@ gsap.registerPlugin(useGSAP); // register the hook to avoid React version discre
 
 export default function Toast({ index, label = "", totalToasts }) {
   const toastContainer = useRef(null);
+
   const calculatedTranslateY = `${(totalToasts - index) * -14}px`;
+  const calculatedOffset = `${(totalToasts - index) * 6}px`;
 
   console.log(`${index} out of ${totalToasts}`);
 
@@ -26,11 +28,15 @@ export default function Toast({ index, label = "", totalToasts }) {
           opacity: 0,
           filter: "blur(2px)",
           y: "100%",
+          right: 0,
+          left: 0,
         },
         {
           opacity: 1,
           filter: "blur(0px)",
           y: 0,
+          right: 0,
+          left: 0,
           duration: 0.4,
           ease: "power1.out",
         },
@@ -55,6 +61,23 @@ export default function Toast({ index, label = "", totalToasts }) {
     {
       scope: toastContainer,
       dependencies: [calculatedTranslateY],
+    },
+  );
+
+  //recalculates the left and right offsets for previously mounted toasts
+  useGSAP(
+    () => {
+      gsap.to(toastContainer.current, {
+        right: calculatedOffset,
+        left: calculatedOffset,
+        duration: 0.4,
+        ease: "power2.out",
+        overwrite: "auto",
+      });
+    },
+    {
+      scope: toastContainer,
+      dependencies: [calculatedOffset],
     },
   );
 

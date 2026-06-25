@@ -1,19 +1,10 @@
 .toast {
   list-style-type: none;
-
-  /* to create stacking */
   position: absolute;
-  right: 0;
-  left: 0;
   background-color: #ffffff;
-  /* bottom: 16px; */
-  /* width: fit-content; */
   text-align: start;
   padding: 16px 16px;
   border-radius: 4px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
   font-family: "Nunito Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
-/* .toast > * {
-  position: absolute;
-} */
