@@ -48,26 +48,11 @@ export default function Toast({ index, label = "", totalToasts }) {
     },
   );
 
-  //recalculates the y for previously mounted toasts
+  //recalculates the y, the left and the right offsets for previously mounted toasts
   useGSAP(
     () => {
       gsap.to(toastContainer.current, {
         y: calculatedTranslateY,
-        duration: 0.4,
-        ease: "power2.out",
-        overwrite: "auto",
-      });
-    },
-    {
-      scope: toastContainer,
-      dependencies: [calculatedTranslateY],
-    },
-  );
-
-  //recalculates the left and right offsets for previously mounted toasts
-  useGSAP(
-    () => {
-      gsap.to(toastContainer.current, {
         right: calculatedOffset,
         left: calculatedOffset,
         duration: 0.4,
@@ -77,7 +62,7 @@ export default function Toast({ index, label = "", totalToasts }) {
     },
     {
       scope: toastContainer,
-      dependencies: [calculatedOffset],
+      dependencies: [calculatedTranslateY, calculatedOffset],
     },
   );
 
