@@ -7,13 +7,19 @@ import "./Toast.css";
 
 gsap.registerPlugin(useGSAP); // register the hook to avoid React version discrepancies
 
-export default function Toast({ index, label = "", totalToasts }) {
+export default function Toast({
+  index,
+  label = "",
+  totalToasts,
+  toBeDisplayed,
+}) {
   const toastContainer = useRef(null);
 
   const calculatedTranslateY = `${(totalToasts - index) * -14}px`;
   const calculatedOffset = `${(totalToasts - index) * 6}px`;
 
   console.log(`${index} out of ${totalToasts}`);
+  console.log("toBeDisplayed: ", toBeDisplayed);
 
   // scope ensures GSAP animations are applied correctly
   useGSAP(
@@ -37,7 +43,7 @@ export default function Toast({ index, label = "", totalToasts }) {
           y: 0,
           right: 0,
           left: 0,
-          duration: 0.4,
+          duration: 0.3,
           ease: "power1.out",
         },
       );
@@ -48,15 +54,18 @@ export default function Toast({ index, label = "", totalToasts }) {
     },
   );
 
-  //recalculates the y, the left and the right offsets for previously mounted toasts
+  // recalculates the y, the left and the right offsets for previously mounted toasts
+  // also adds opacity, filter (blur) whether the toast will be displayed or not
   useGSAP(
     () => {
       gsap.to(toastContainer.current, {
+        opacity: toBeDisplayed ? 1 : 0,
+        filter: toBeDisplayed ? "blur(0px)" : "blur(2px)",
         y: calculatedTranslateY,
         right: calculatedOffset,
         left: calculatedOffset,
-        duration: 0.4,
-        ease: "power2.out",
+        duration: 0.3,
+        ease: "power1.out",
         overwrite: "auto",
       });
     },
@@ -73,7 +82,7 @@ export default function Toast({ index, label = "", totalToasts }) {
       key={index}
       ref={toastContainer}
     >
-      {label + index}
+      {label}
     </li>
   );
 }
